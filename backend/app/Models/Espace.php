@@ -29,4 +29,10 @@ class Espace extends Model
             'equipement_id'
         );
     }
+
+    // Un espace a plusieurs photos
+    public function photos()
+    {
+        return $this->hasMany(EspacePhoto::class);
+    }
 }
