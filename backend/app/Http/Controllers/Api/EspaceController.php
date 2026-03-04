@@ -23,7 +23,7 @@ class EspaceController extends Controller
         if ($request->has('date_debut') && $request->has('date_fin')) {
             $query->whereDoesntHave('reservations', function ($q) use ($request) {
                 $q->where('date_debut', '<=', $request->date_fin)
-                  ->where('date_fin', '>=', $request->date_debut);
+                    ->where('date_fin', '>=', $request->date_debut);
             });
         }
 
@@ -47,6 +47,7 @@ class EspaceController extends Controller
             'tarif_journalier' => 'required|numeric',
             'equipements'      => 'array',
             'photos'           => 'array',
+            'photos.*'         => 'image|mimes:jpeg,png,jpg,webp,avif|max:2048',
         ]);
 
         $espace = Espace::create([
@@ -61,9 +62,10 @@ class EspaceController extends Controller
             $espace->equipements()->sync($request->equipements);
         }
 
-        // Associer les photos
-        if ($request->has('photos')) {
-            foreach ($request->photos as $chemin) {
+        // Upload des photos
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $chemin = $photo->store('espaces', 'public');
                 EspacePhoto::create([
                     'espace_id' => $espace->id,
                     'chemin'    => $chemin,
@@ -88,7 +90,10 @@ class EspaceController extends Controller
         ]);
 
         $espace->update($request->only([
-            'nom', 'surface', 'type', 'tarif_journalier'
+            'nom',
+            'surface',
+            'type',
+            'tarif_journalier'
         ]));
 
         // Mettre à jour les équipements
@@ -108,4 +113,3 @@ class EspaceController extends Controller
         return response()->json(['message' => 'Espace supprimé avec succès']);
     }
 }
-
