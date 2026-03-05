@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Profil utilisateur
     Route::put('/users/{id}',    [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::put('/users/{id}/password', [UserController::class, 'updatePassword']);
 
     // Réservations (utilisateur)
     Route::get('/reservations',         [ReservationController::class, 'index']);

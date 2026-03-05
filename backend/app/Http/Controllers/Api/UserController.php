@@ -41,6 +41,37 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    // PUT /api/users/{id}/password — modifier son mot de passe
+    public function updatePassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        // Vérifier que c'est bien son propre compte
+        if ($request->user()->id !== $user->id) {
+            return response()->json(['message' => 'Non autorisé'], 403);
+        }
+
+        $request->validate([
+            'ancien_mot_de_passe'       => 'required',
+            'nouveau_mot_de_passe'      => 'required|min:8',
+            'confirmation_mot_de_passe' => 'required|same:nouveau_mot_de_passe',
+        ]);
+
+        // Vérifier que l'ancien mot de passe est correct
+        if (!Hash::check($request->ancien_mot_de_passe, $user->mot_de_passe)) {
+            return response()->json([
+                'message' => 'Ancien mot de passe incorrect'
+            ], 401);
+        }
+
+        // Mettre à jour le mot de passe
+        $user->update([
+            'mot_de_passe' => Hash::make($request->nouveau_mot_de_passe),
+        ]);
+
+        return response()->json(['message' => 'Mot de passe modifié avec succès']);
+    }
+
     // DELETE /api/users/{id} — supprimer un compte
     public function destroy(Request $request, $id)
     {
