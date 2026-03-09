@@ -109,6 +109,6 @@ class UserController extends Controller
             'type'         => 'admin',
         ]);
 
-        return response()->json($admin, 201);
+        return response()->json($admin, 201); 
     }
 }

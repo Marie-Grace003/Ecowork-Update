@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class EquipementController extends Controller
 {
-    // GET /api/equipements — liste tous les équipements
+    // GET /api/equipements — liste tous les équipements 
     public function index()
     {
         return response()->json(Equipement::all());

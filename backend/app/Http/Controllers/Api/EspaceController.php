@@ -121,7 +121,7 @@ class EspaceController extends Controller
     // DELETE /api/admin/espaces/{id} — supprimer un espace (admin)
     public function destroy($id)
     {
-        $espace = Espace::findOrFail($id);
+        $espace = Espace::findOrFail($id); 
 
         // Supprimer les fichiers photos du stockage
         foreach ($espace->photos as $photo) {
@@ -133,7 +133,7 @@ class EspaceController extends Controller
         return response()->json(['message' => 'Espace supprimé avec succès']);
     }
 
-    // DELETE /api/admin/espaces/photos/{id} — supprimer une photo (admin) 
+    // DELETE /api/admin/espaces/photos/{id} — supprimer une photo (admin)
     public function destroyPhoto($id)
     {
         $photo = EspacePhoto::findOrFail($id);
