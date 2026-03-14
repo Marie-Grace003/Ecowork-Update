@@ -1,3 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-eco-blue: #7BDFF2;
+  --color-eco-mint: #B2F7EF;
+  --color-eco-light: #EFF7F6;
+  --color-eco-pink: #F7D6E0;
+  --font-family-sans: system-ui, sans-serif;
+}
