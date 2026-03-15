@@ -43,7 +43,7 @@ export default function UserDashboard() {
         const matchSearch = e.nom.toLowerCase().includes(search.toLowerCase())
         const matchType = filterType ? e.type === filterType : true
         return matchSearch && matchType
-    })
+    }).slice(0, 6)
 
     return (
         <div className="min-h-screen bg-eco-light flex flex-col">
@@ -68,11 +68,10 @@ export default function UserDashboard() {
                 <div className="flex gap-2 mb-6">
                     <button
                         onClick={() => setActiveTab('espaces')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                            activeTab === 'espaces'
-                                ? 'text-white'
-                                : 'bg-white text-gray-500 hover:bg-gray-50'
-                        }`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'espaces'
+                            ? 'text-white'
+                            : 'bg-white text-gray-500 hover:bg-gray-50'
+                            }`}
                         style={activeTab === 'espaces' ? {
                             background: 'linear-gradient(to right, #7BDFF2, #7BDFF2, #B2F7EF)'
                         } : {}}
@@ -82,11 +81,10 @@ export default function UserDashboard() {
                     </button>
                     <button
                         onClick={() => setActiveTab('reservations')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                            activeTab === 'reservations'
-                                ? 'text-white'
-                                : 'bg-white text-gray-500 hover:bg-gray-50'
-                        }`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'reservations'
+                            ? 'text-white'
+                            : 'bg-white text-gray-500 hover:bg-gray-50'
+                            }`}
                         style={activeTab === 'reservations' ? {
                             background: 'linear-gradient(to right, #7BDFF2, #7BDFF2, #B2F7EF)'
                         } : {}}
@@ -205,6 +203,20 @@ export default function UserDashboard() {
                                     </div>
                                 ))}
                             </div>
+
+                        )}
+
+                        {/* Bouton voir tous les espaces */}
+                        {espaces.length > 6 && (
+                            <div className="flex justify-center mt-6">
+                                <button
+                                    onClick={() => navigate('/espaces')}
+                                    className="flex items-center gap-2 px-6 py-3 rounded-xl text-white text-sm font-medium bg-zinc-300"
+                                >
+                                    <i className="bi bi-grid"></i>
+                                    Voir tous les espaces
+                                </button>
+                            </div>
                         )}
                     </>
                 ) : (
@@ -229,7 +241,7 @@ export default function UserDashboard() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {reservations.map((r) => (
+                                        {reservations.slice(0, 3).map((r) => (
                                             <tr key={r.id} className="border-b border-gray-50 hover:bg-eco-light transition-all">
                                                 <td className="py-3 text-sm font-medium text-gray-800">
                                                     {r.espace?.nom}
@@ -244,11 +256,10 @@ export default function UserDashboard() {
                                                     {r.prix_total}€
                                                 </td>
                                                 <td className="py-3">
-                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                        r.facture_acquittee
-                                                            ? 'bg-eco-mint text-gray-700'
-                                                            : 'bg-eco-pink text-gray-700'
-                                                    }`}>
+                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${r.facture_acquittee
+                                                        ? 'bg-eco-mint text-gray-700'
+                                                        : 'bg-eco-pink text-gray-700'
+                                                        }`}>
                                                         {r.facture_acquittee ? '✓ Payé' : '⏳ En attente'}
                                                     </span>
                                                 </td>
@@ -264,6 +275,18 @@ export default function UserDashboard() {
                                         ))}
                                     </tbody>
                                 </table>
+
+                                {reservations.length > 0 && (
+                                    <div className="flex justify-center mt-4">
+                                        <button
+                                            onClick={() => navigate('/reservations')}
+                                            className="flex items-center gap-2 px-6 py-3 rounded-xl text-white text-sm font-medium bg-zinc-300"
+                                        >
+                                            <i className="bi bi-calendar-check"></i>
+                                            Voir toutes mes réservations
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
