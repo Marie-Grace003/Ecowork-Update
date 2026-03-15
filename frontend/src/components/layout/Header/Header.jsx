@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../contexts/AuthContext'
 import logo from '../../../assets/logo.svg'
@@ -7,6 +7,8 @@ export default function Header() {
     const { user, logout, isAdmin } = useAuth()
     const navigate = useNavigate()
     const [dropdownOpen, setDropdownOpen] = useState(false)
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const dropdownRef = useRef(null)
 
     const handleLogout = async () => {
         await logout()
@@ -27,6 +29,16 @@ export default function Header() {
     ]
 
     const links = isAdmin() ? adminLinks : userLinks
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setDropdownOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
 
     return (
         <header className="bg-white border-b border-gray-100 px-6 py-3">
@@ -65,8 +77,8 @@ export default function Header() {
                     ))}
                 </nav>
 
-                {/* Dropdown utilisateur */}
-                <div className="relative">
+                {/* Dropdown utilisateur desktop */}
+                <div className="relative hidden md:block" ref={dropdownRef}>
                     <button
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                         className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-50 transition-all"
@@ -107,7 +119,65 @@ export default function Header() {
                     )}
                 </div>
 
+                {/* Bouton hamburger mobile */}
+                <button
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className="md:hidden p-2 rounded-xl hover:bg-gray-50 transition-all"
+                >
+                    <i className={`bi ${mobileMenuOpen ? 'bi-x-lg' : 'bi-list'} text-xl text-gray-600`}></i>
+                </button>
+
             </div>
+
+            {/* Menu mobile */}
+            {mobileMenuOpen && (
+                <div className="md:hidden border-t border-gray-100 pt-4 pb-2 mt-3 space-y-1">
+                    {links.map((link) => (
+                        <NavLink
+                            key={link.path}
+                            to={link.path}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className={({ isActive }) =>
+                                `flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive
+                                    ? 'text-white'
+                                    : 'text-gray-500 hover:bg-gray-50'
+                                }`
+                            }
+                            style={({ isActive }) => isActive ? {
+                                background: 'linear-gradient(to right, #7BDFF2, #B2F7EF)'
+                            } : {}}
+                        >
+                            {link.label}
+                        </NavLink>
+                    ))}
+                    <hr className="border-gray-100 my-2" />
+                    {/* Infos utilisateur mobile */}
+                    <div className="flex items-center gap-3 px-4 py-2">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                            style={{ background: 'linear-gradient(to right, #7BDFF2, #B2F7EF)' }}
+                        >
+                            {user?.prenom?.charAt(0)}{user?.nom?.charAt(0)}
+                        </div>
+                        <span className="text-sm font-medium text-gray-700">
+                            {user?.prenom} {user?.nom}
+                        </span>
+                    </div>
+                    <button
+                        onClick={() => { navigate(isAdmin() ? '/admin/profil' : '/profil'); setMobileMenuOpen(false) }}
+                        className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-eco-light transition-all flex items-center gap-2 rounded-xl"
+                    >
+                        <i className="bi bi-person"></i>
+                        Mon profil
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-all flex items-center gap-2 rounded-xl"
+                    >
+                        <i className="bi bi-box-arrow-right"></i>
+                        Déconnexion
+                    </button>
+                </div>
+            )}
         </header>
     )
 }

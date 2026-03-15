@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
 import api from '../../../services/api'
+import Footer from '../../../components/layout/Footer/Footer'
 
 export default function AdminDashboard() {
   const navigate = useNavigate()
@@ -53,8 +54,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <span className="text-gray-500 text-sm">Utilisateurs</span>
-              <div className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ background: 'linear-gradient(to right, #7BDFF2, #B2F7EF)' }}>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-eco-blue">
                 <i className="bi bi-people"></i>
               </div>
             </div>
@@ -65,8 +65,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <span className="text-gray-500 text-sm">Espaces</span>
-              <div className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ background: 'linear-gradient(to right, #7BDFF2, #B2F7EF)' }}>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-eco-pink">
                 <i className="bi bi-building"></i>
               </div>
             </div>
@@ -77,8 +76,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <span className="text-gray-500 text-sm">Réservations</span>
-              <div className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ background: 'linear-gradient(to right, #7BDFF2, #B2F7EF)' }}>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-eco-mint">
                 <i className="bi bi-calendar-check"></i>
               </div>
             </div>
@@ -90,7 +88,7 @@ export default function AdminDashboard() {
         {/* Actions rapides */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white rounded-2xl p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-gray-800 mb-1">Actions rapides</h2>
+            <h2 className="text-lg font-bold text-gray-800 tracking-tighter mb-1">Actions rapides</h2>
             <p className="text-gray-400 text-sm mb-4">Gérez votre plateforme efficacement</p>
             <div className="space-y-2">
               {[
@@ -111,7 +109,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-gray-800 mb-1">Créations rapides</h2>
+            <h2 className="text-lg font-bold text-gray-800 tracking-tighter mb-1">Créations rapides</h2>
             <p className="text-gray-400 text-sm mb-4">Ajoutez de nouveaux éléments</p>
             <div className="space-y-2">
               {[
@@ -121,8 +119,8 @@ export default function AdminDashboard() {
                 <button
                   key={action.label}
                   onClick={() => navigate(action.path)}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white text-sm font-medium transition-opacity hover:opacity-90"
-                  style={{ background: 'linear-gradient(to right, #7BDFF2, #7BDFF2, #B2F7EF)' }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-800 text-sm font-medium transition-opacity hover:opacity-90"
+                  style={{ background: 'linear-gradient(to left, #7BDFF2, #7BDFF2, #B2F7EF)' }}
                 >
                   <span>{action.icon}</span>
                   {action.label}
@@ -133,6 +131,8 @@ export default function AdminDashboard() {
         </div>
 
       </main>
+
+      <Footer />
     </div>
   )
 }
