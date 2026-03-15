@@ -24,7 +24,11 @@ export default function Login() {
         navigate('/dashboard')
       }
     } catch (err) {
-      setError('Email ou mot de passe incorrect')
+    if (err.response?.data?.message) {
+        setError(err.response.data.message)
+    } else {
+        setError('Email ou mot de passe incorrect')
+    }
     } finally {
       setLoading(false)
     }
@@ -69,7 +73,7 @@ export default function Login() {
           type="submit"
           disabled={loading}
           className="w-full text-white py-3 rounded-lg font-medium transition-opacity disabled:opacity-50"
-          style={{ background: 'linear-gradient(to right, #7BDFF2, #B2F7EF)' }}
+          style={{ background: 'linear-gradient(to left, #7BDFF2, #7BDFF2, #B2F7EF)' }}
         >
           {loading ? 'Connexion...' : 'Se connecter'}
         </button>
