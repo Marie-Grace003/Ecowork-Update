@@ -11,7 +11,7 @@ class ReservationController extends Controller
     public function index(Request $request)
     {
         $reservations = Reservation::with(['espace'])
-            ->where('user_id', $request->user()->id) 
+            ->where('user_id', $request->user()->id)
             ->get();
         return response()->json($reservations);
     }
@@ -100,7 +100,7 @@ class ReservationController extends Controller
                 'message' => 'Cet espace est déjà réservé pour ces dates'
             ], 409);
         }
-
+     // — Calcul automatique
         $espace = Espace::findOrFail($reservation->espace_id);
         $debut  = \Carbon\Carbon::parse($request->date_debut);
         $fin    = \Carbon\Carbon::parse($request->date_fin);

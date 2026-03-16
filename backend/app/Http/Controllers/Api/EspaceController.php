@@ -82,7 +82,7 @@ class EspaceController extends Controller
                 ]);
             }
         }
-
+          Cache::forget('espaces');
         return response()->json($espace->load(['equipements', 'photos']), 201);
     }
 
@@ -123,7 +123,7 @@ class EspaceController extends Controller
         if ($request->has('equipements')) {
             $espace->equipements()->sync($request->equipements);
         }
-
+        Cache::forget('espaces');
         return response()->json($espace->load(['equipements', 'photos']));
     }
 
@@ -138,7 +138,7 @@ class EspaceController extends Controller
         }
 
         $espace->delete();
-
+       Cache::forget('espaces');
         return response()->json(['message' => 'Espace supprimé avec succès']);
     }
 
@@ -148,7 +148,8 @@ class EspaceController extends Controller
         $photo = EspacePhoto::findOrFail($id);
         Storage::disk('public')->delete($photo->chemin);
         $photo->delete();
-
+        Cache::forget('espaces');
         return response()->json(['message' => 'Photo supprimée avec succès']);
     }
 }
+
