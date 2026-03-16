@@ -40,19 +40,43 @@ export default function Header() {
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
 
+    const [visible, setVisible] = useState(true)
+    const timeoutRef = useRef(null)
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setVisible(true)
+
+            // Annule le timer précédent
+            if (timeoutRef.current) clearTimeout(timeoutRef.current)
+
+            // Cache le header après 2 secondes sans scroll sauf en haut de la page
+            timeoutRef.current = setTimeout(() => {
+                if (window.scrollY > 0) {
+                    setVisible(false)
+                }
+            }, 2000)
+        }
+
+        window.addEventListener('scroll', handleScroll)
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+            if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        }
+    }, [])
+
     return (
-        <header className="bg-white border-b border-gray-100 px-6 py-3">
+        <header className={`bg-white border-b border-gray-100 px-6 py-3 sticky top-0 z-40 transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'
+            }`}>
             <div className="max-w-7xl mx-auto flex items-center justify-between">
 
                 {/* Logo + nom */}
                 <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 overflow-hidden flex items-center justify-center">
-                        <img
-                            src={logo}
-                            alt="EcoWork"
-                            className="w-16 h-16 object-contain scale-150"
-                        />
-                    </div>
+                    <img
+                        src={logo}
+                        alt="EcoWork"
+                        className="w-10 h-10 object-contain"
+                    />
                     <span className="font-bold text-gray-800 text-lg">EcoWork</span>
                 </div>
 

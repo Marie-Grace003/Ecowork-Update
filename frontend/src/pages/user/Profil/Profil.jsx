@@ -19,7 +19,9 @@ export default function Profil() {
         email: user?.email || '',
         telephone: user?.telephone || '',
         adresse: user?.adresse || '',
+        ancien_mot_de_passe: '',
         nouveau_mot_de_passe: '',
+        confirmation_mot_de_passe: '',
     })
 
     const handleSubmit = async (e) => {
@@ -38,8 +40,9 @@ export default function Profil() {
 
             if (formData.nouveau_mot_de_passe) {
                 await api.put(`/users/${user.id}/password`, {
+                    ancien_mot_de_passe: formData.ancien_mot_de_passe,
                     nouveau_mot_de_passe: formData.nouveau_mot_de_passe,
-                    confirmation_mot_de_passe: formData.nouveau_mot_de_passe,
+                    confirmation_mot_de_passe: formData.confirmation_mot_de_passe,
                 })
             }
 
@@ -64,8 +67,8 @@ export default function Profil() {
     }
 
     const inputClass = `w-full border rounded-lg px-4 py-2 text-sm focus:outline-none ${editing
-            ? 'border-gray-200 bg-eco-light focus:border-eco-blue'
-            : 'border-transparent bg-eco-light text-gray-600'
+        ? 'border-gray-200 bg-eco-light focus:border-eco-blue'
+        : 'border-transparent bg-eco-light text-gray-600'
         }`
 
     return (
@@ -162,17 +165,38 @@ export default function Profil() {
 
                         {/* Mot de passe uniquement en mode édition */}
                         {editing && (
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Nouveau mot de passe <span className="text-gray-400">(optionnel)</span>
-                                </label>
-                                <input
-                                    type="password"
-                                    value={formData.nouveau_mot_de_passe}
-                                    onChange={(e) => setFormData({ ...formData, nouveau_mot_de_passe: e.target.value })}
-                                    placeholder="Laisser vide pour ne pas changer"
-                                    className="w-full border border-gray-200 bg-eco-light rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-eco-blue"
-                                />
+                            <div className="space-y-3">
+                                <p className="text-sm font-medium text-gray-700">Modifier le mot de passe <span className="text-gray-400 font-normal">(optionnel)</span></p>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Ancien mot de passe</label>
+                                    <input
+                                        type="password"
+                                        value={formData.ancien_mot_de_passe}
+                                        onChange={(e) => setFormData({ ...formData, ancien_mot_de_passe: e.target.value })}
+                                        placeholder="Votre mot de passe actuel"
+                                        className="w-full border border-gray-200 bg-eco-light rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-eco-blue"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Nouveau mot de passe</label>
+                                    <input
+                                        type="password"
+                                        value={formData.nouveau_mot_de_passe}
+                                        onChange={(e) => setFormData({ ...formData, nouveau_mot_de_passe: e.target.value })}
+                                        placeholder="Minimum 8 caractères"
+                                        className="w-full border border-gray-200 bg-eco-light rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-eco-blue"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Confirmer le nouveau mot de passe</label>
+                                    <input
+                                        type="password"
+                                        value={formData.confirmation_mot_de_passe}
+                                        onChange={(e) => setFormData({ ...formData, confirmation_mot_de_passe: e.target.value })}
+                                        placeholder="Répétez le nouveau mot de passe"
+                                        className="w-full border border-gray-200 bg-eco-light rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-eco-blue"
+                                    />
+                                </div>
                             </div>
                         )}
 

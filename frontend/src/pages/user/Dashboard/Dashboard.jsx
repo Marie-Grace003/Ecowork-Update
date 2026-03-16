@@ -134,7 +134,7 @@ export default function UserDashboard() {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredEspaces.map((espace) => (
-                                    <div key={espace.id} className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-all">
+                                    <div key={espace.id} className="bg-white rounded-2xl shadow-xl hover:shadow-gray-500 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group cursor-pointer">
 
                                         {/* Photo */}
                                         <div className="relative h-48 bg-eco-light">
@@ -142,7 +142,7 @@ export default function UserDashboard() {
                                                 <img
                                                     src={`http://127.0.0.1:8000/storage/${espace.photos[0].chemin}`}
                                                     alt={espace.nom}
-                                                    className="w-full h-full object-cover"
+                                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                                     loading="lazy"
                                                 />
                                             ) : (
@@ -207,7 +207,7 @@ export default function UserDashboard() {
                         )}
 
                         {/* Bouton voir tous les espaces */}
-                        {espaces.length > 6 && (
+                        {espaces.length > 3 && (
                             <div className="flex justify-center mt-6">
                                 <button
                                     onClick={() => navigate('/espaces')}

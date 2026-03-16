@@ -7,14 +7,14 @@ export default function Login() {
     email: '',
     mot_de_passe: '',
   })
-  const [error, setError] = useState('')
+  const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setError('')
+    setErrors({})
     setLoading(true)
     try {
       const user = await login(formData.email, formData.mot_de_passe)
@@ -24,11 +24,11 @@ export default function Login() {
         navigate('/dashboard')
       }
     } catch (err) {
-    if (err.response?.data?.message) {
-        setError(err.response.data.message)
-    } else {
-        setError('Email ou mot de passe incorrect')
-    }
+      if (err.response?.data?.message) {
+        setErrors({ general: err.response.data.message })
+      } else {
+        setErrors({ general: 'Email ou mot de passe incorrect' })
+      }
     } finally {
       setLoading(false)
     }
@@ -41,10 +41,8 @@ export default function Login() {
         Entrez vos identifiants pour accéder à votre espace
       </p>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-          {error}
-        </div>
+      {errors.general && (
+        <p className="text-red-400 text-xs text-center mb-4">{errors.general}</p>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -55,7 +53,10 @@ export default function Login() {
             placeholder="votre.email@exemple.fr"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-eco-blue"
+            className={`w-full border rounded-lg px-4 py-2 text-sm focus:outline-none ${errors.general
+              ? 'border-red-400 bg-red-50'
+              : 'border-gray-200 bg-eco-light focus:border-eco-blue'
+              }`}
             required
           />
         </div>
@@ -65,7 +66,9 @@ export default function Login() {
             type="password"
             value={formData.mot_de_passe}
             onChange={(e) => setFormData({ ...formData, mot_de_passe: e.target.value })}
-            className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-eco-blue"
+            className={`w-full border rounded-lg px-4 py-2 text-sm focus:outline-none ${errors.general
+              ? 'border-red-400 bg-red-50'
+              : 'border-gray-200 bg-eco-light focus:border-eco-blue'}`}
             required
           />
         </div>
@@ -77,6 +80,11 @@ export default function Login() {
         >
           {loading ? 'Connexion...' : 'Se connecter'}
         </button>
+
+        <p className="text-center text-xs text-gray-400 mt-3">
+          Mot de passe oublié ? Contactez un administrateur à{' '}
+          <span className="text-eco-blue">admin@ecowork.com</span>
+        </p>
       </form>
     </>
   )

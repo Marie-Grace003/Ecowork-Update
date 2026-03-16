@@ -98,7 +98,7 @@ export default function AdminEspaces() {
                         >
                             <option value="">Tous les types</option>
                             <option value="bureau">Bureau</option>
-                            <option value="salle_de_reunion">Salle de réunion</option>
+                            <option value="salle_de_reunion">Salle de réunion</option> 
                             <option value="conference">Conférence</option>
                         </select>
                     </div>

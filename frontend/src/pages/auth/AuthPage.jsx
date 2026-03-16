@@ -27,8 +27,8 @@ export default function AuthPage() {
           <button
             onClick={() => setActiveTab('login')}
             className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'login'
-                ? 'text-white'
-                : 'text-gray-500'
+              ? 'text-white'
+              : 'text-gray-500'
               }`}
             style={activeTab === 'login' ? {
               background: 'linear-gradient(to right, #7BDFF2,#7BDFF2, #B2F7EF)'
@@ -39,8 +39,8 @@ export default function AuthPage() {
           <button
             onClick={() => setActiveTab('register')}
             className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'register'
-                ? 'text-white'
-                : 'text-gray-500'
+              ? 'text-white'
+              : 'text-gray-500'
               }`}
             style={activeTab === 'register' ? {
               background: 'linear-gradient(to right, #7BDFF2, #7BDFF2, #B2F7EF)'
@@ -51,7 +51,12 @@ export default function AuthPage() {
         </div>
 
         {/* Formulaire */}
-        {activeTab === 'login' ? <Login /> : <Register />}
+        <div className={activeTab === 'login' ? 'block' : 'hidden'}>
+          <Login />
+        </div>
+        <div className={activeTab === 'register' ? 'block' : 'hidden'}>
+          <Register />
+        </div>
 
       </div>
     </div>

@@ -44,7 +44,7 @@ export default function AdminDashboard() {
           <h1 className="text-4xl font-bold tracking-tighter text-gray-800">
             Tableau de bord
           </h1>
-          <p className="text-gray-400 mt-1">
+          <p className="text-gray-600 mt-1">
             Gérez votre plateforme EcoWork et suivez l'activité en temps réel
           </p>
         </div>
