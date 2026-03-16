@@ -97,8 +97,8 @@ class EspaceController extends Controller
             'type'             => 'in:bureau,salle_de_reunion,conference',
             'tarif_journalier' => 'numeric',
             'equipements'      => 'array',
-            'photos'           => 'array',           // ✅ ajouté
-            'photos.*'         => 'image|mimes:jpeg,png,jpg,webp,avif|max:2048', // ✅ ajouté
+            'photos'           => 'array',
+            'photos.*'         => 'image|mimes:jpeg,png,jpg,webp,avif|max:2048',
         ]);
 
         $espace->update($request->only([
