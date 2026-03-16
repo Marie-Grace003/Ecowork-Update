@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
-import Footer from '../../../components/layout/Footer/Footer'
 import api from '../../../services/api'
 
 export default function CreateAdmin() {
@@ -126,7 +125,7 @@ export default function CreateAdmin() {
         </div>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

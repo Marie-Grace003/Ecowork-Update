@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
-import Footer from '../../../components/layout/Footer/Footer'
 import EditEspaceModal from './EditEspaceModal'
+import Pagination from '../../../components/Pagination'
 import api from '../../../services/api'
 
 const typeBadge = {
@@ -18,21 +18,27 @@ export default function AdminEspaces() {
     const [filterType, setFilterType] = useState('')
     const [loading, setLoading] = useState(true)
     const [selectedEspace, setSelectedEspace] = useState(null)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [lastPage, setLastPage] = useState(1)
 
     useEffect(() => {
-        fetchEspaces()
-    }, [])
-
-    const fetchEspaces = async () => {
-        try {
-            const response = await api.get('/espaces')
-            setEspaces(response.data.data || response.data)
-        } catch {
-            console.error('Erreur chargement espaces')
-        } finally {
-            setLoading(false)
+        const fetchEspaces = async () => {
+            setLoading(true)
+            try {
+                let url = `/espaces?page=${currentPage}`
+                if (filterType) url += `&type=${filterType}`
+                const response = await api.get(url)
+                setEspaces(response.data.data || response.data)
+                setLastPage(response.data.last_page || 1)
+            } catch {
+                console.error('Erreur chargement espaces')
+            } finally {
+                setLoading(false)
+            }
         }
-    }
+
+        fetchEspaces()
+    }, [currentPage, filterType])
 
     const handleDelete = async (id) => {
         if (!confirm('Supprimer cet espace ?')) return
@@ -44,11 +50,9 @@ export default function AdminEspaces() {
         }
     }
 
-    const filtered = espaces.filter(e => {
-        const matchSearch = e.nom.toLowerCase().includes(search.toLowerCase())
-        const matchType = filterType ? e.type === filterType : true
-        return matchSearch && matchType
-    })
+    const filtered = espaces.filter(e =>
+        e.nom.toLowerCase().includes(search.toLowerCase())
+    )
 
     return (
         <div className="min-h-screen bg-eco-light flex flex-col">
@@ -56,7 +60,6 @@ export default function AdminEspaces() {
 
             <main className="flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
 
-                {/* Retour */}
                 <button
                     onClick={() => navigate('/admin/dashboard')}
                     className="flex items-center gap-2 text-gray-500 hover:text-gray-800 text-sm mb-6 transition-all"
@@ -66,7 +69,6 @@ export default function AdminEspaces() {
                 </button>
 
                 <div className="bg-white rounded-2xl shadow-sm p-6">
-                    {/* En-tête */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <h1 className="text-2xl font-bold text-gray-800 tracking-tighter">Gestion des espaces</h1>
                         <button
@@ -93,12 +95,12 @@ export default function AdminEspaces() {
                         </div>
                         <select
                             value={filterType}
-                            onChange={(e) => setFilterType(e.target.value)}
+                            onChange={(e) => { setFilterType(e.target.value); setCurrentPage(1) }}
                             className="px-4 py-2 border border-gray-100 rounded-xl text-sm focus:outline-none bg-white text-gray-600"
                         >
                             <option value="">Tous les types</option>
                             <option value="bureau">Bureau</option>
-                            <option value="salle_de_reunion">Salle de réunion</option> 
+                            <option value="salle_de_reunion">Salle de réunion</option>
                             <option value="conference">Conférence</option>
                         </select>
                     </div>
@@ -112,8 +114,6 @@ export default function AdminEspaces() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filtered.map((espace) => (
                                 <div key={espace.id} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-
-                                    {/* Photo */}
                                     <div className="relative h-48 bg-eco-light">
                                         {espace.photos && espace.photos.length > 0 ? (
                                             <img
@@ -127,24 +127,20 @@ export default function AdminEspaces() {
                                                 <i className="bi bi-building text-4xl"></i>
                                             </div>
                                         )}
-                                        {/* Badge type */}
                                         <span className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium ${typeBadge[espace.type]?.color}`}>
                                             {typeBadge[espace.type]?.label}
                                         </span>
-                                        {/* Nom sur la photo */}
                                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
                                             <h3 className="text-white font-bold">{espace.nom}</h3>
                                         </div>
                                     </div>
 
-                                    {/* Infos */}
                                     <div className="p-4">
                                         <div className="flex items-center gap-1 text-gray-500 text-sm mb-3">
                                             <i className="bi bi-arrows-angle-expand"></i>
                                             <span>{espace.surface} m²</span>
                                         </div>
 
-                                        {/* Équipements */}
                                         {espace.equipements && espace.equipements.length > 0 && (
                                             <div className="mb-3">
                                                 <p className="text-xs text-gray-400 mb-2">Équipements inclus</p>
@@ -163,12 +159,10 @@ export default function AdminEspaces() {
                                             </div>
                                         )}
 
-                                        {/* Tarif */}
                                         <p className="text-gray-800 font-bold mb-4">
                                             {espace.tarif_journalier}€ <span className="text-gray-400 font-normal text-sm">/jour</span>
                                         </p>
 
-                                        {/* Boutons */}
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => setSelectedEspace(espace)}
@@ -188,6 +182,13 @@ export default function AdminEspaces() {
                             ))}
                         </div>
                     )}
+
+                    {/* Pagination */}
+                    <Pagination
+                        currentPage={currentPage}
+                        lastPage={lastPage}
+                        onPageChange={(page) => setCurrentPage(page)}
+                    />
                 </div>
 
                 {selectedEspace && (
@@ -201,8 +202,6 @@ export default function AdminEspaces() {
                     />
                 )}
             </main>
-
-            <Footer />
         </div>
     )
 }

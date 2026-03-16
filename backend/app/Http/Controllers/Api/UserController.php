@@ -12,7 +12,7 @@ class UserController extends Controller
     // GET /api/admin/users — liste tous les utilisateurs (admin)
     public function index()
     {
-        $users = User::where('type', 'user')->get();
+        $users = User::where('type', 'user')->paginate(10);
         return response()->json($users);
     }
 
@@ -109,6 +109,6 @@ class UserController extends Controller
             'type'         => 'admin',
         ]);
 
-        return response()->json($admin, 201); 
+        return response()->json($admin, 201);
     }
 }

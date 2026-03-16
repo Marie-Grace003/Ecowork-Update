@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
-import Footer from '../../../components/layout/Footer/Footer'
+import Pagination from '../../../components/Pagination'
 import api from '../../../services/api'
 
 const typeBadge = {
@@ -18,15 +18,21 @@ export default function Espaces() {
     const [filterType, setFilterType] = useState('')
     const [dateDebut, setDateDebut] = useState('')
     const [dateFin, setDateFin] = useState('')
+    const [currentPage, setCurrentPage] = useState(1)
+    const [lastPage, setLastPage] = useState(1)
+
+    const today = new Date().toISOString().split('T')[0]
 
     useEffect(() => {
-        fetchEspaces()
-    }, [])
-
     const fetchEspaces = async () => {
+        setLoading(true)
         try {
-            const response = await api.get('/espaces')
+            let url = `/espaces?page=${currentPage}`
+            if (filterType) url += `&type=${filterType}`
+            if (dateDebut && dateFin) url += `&date_debut=${dateDebut}&date_fin=${dateFin}`
+            const response = await api.get(url)
             setEspaces(response.data.data || response.data)
+            setLastPage(response.data.last_page || 1)
         } catch {
             console.error('Erreur chargement espaces')
         } finally {
@@ -34,28 +40,14 @@ export default function Espaces() {
         }
     }
 
+    fetchEspaces()
+}, [currentPage ,filterType, dateDebut, dateFin])
+
+
     const filtered = espaces.filter(e => {
         const matchSearch = e.nom.toLowerCase().includes(search.toLowerCase())
-        const matchType = filterType ? e.type === filterType : true
-        return matchSearch && matchType
+        return matchSearch
     })
-
-    const today = new Date().toISOString().split('T')[0]
-
-    const handleSearch = async () => {
-        setLoading(true)
-        try {
-            let url = '/espaces?'
-            if (filterType) url += `type=${filterType}&`
-            if (dateDebut && dateFin) url += `date_debut=${dateDebut}&date_fin=${dateFin}`
-            const response = await api.get(url)
-            setEspaces(response.data.data || response.data)
-        } catch {
-            console.error('Erreur recherche')
-        } finally {
-            setLoading(false)
-        }
-    }
 
     return (
         <div className="min-h-screen bg-eco-light flex flex-col">
@@ -63,7 +55,6 @@ export default function Espaces() {
 
             <main className="flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
 
-                {/* Titre */}
                 <div className="mb-6">
                     <p className="text-eco-blue text-sm font-medium mb-1">✦ Espaces éco-responsables</p>
                     <h1 className="text-4xl font-bold tracking-tighter text-gray-800">
@@ -74,10 +65,9 @@ export default function Espaces() {
                     </p>
                 </div>
 
-                {/* Filtres avancés */}
+                {/* Filtres */}
                 <div className="bg-white rounded-2xl shadow-sm p-4 mb-6">
                     <div className="flex flex-col md:flex-row gap-3">
-                        {/* Recherche */}
                         <div className="relative flex-1">
                             <i className="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                             <input
@@ -89,7 +79,6 @@ export default function Espaces() {
                             />
                         </div>
 
-                        {/* Type */}
                         <select
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value)}
@@ -101,7 +90,6 @@ export default function Espaces() {
                             <option value="conference">Conférence</option>
                         </select>
 
-                        {/* Dates disponibilité */}
                         <div className="flex items-center gap-2 border-l border-gray-100 pl-3">
                             <input
                                 type="date"
@@ -119,24 +107,12 @@ export default function Espaces() {
                                 className="px-3 py-2 text-sm focus:outline-none bg-eco-light rounded-lg text-gray-600"
                             />
                         </div>
-
-                        {/* Bouton recherche par dispo */}
-                        {dateDebut && dateFin && (
-                            <button
-                                onClick={handleSearch}
-                                className="px-4 py-2 rounded-xl text-white text-sm font-medium transition-opacity hover:opacity-90"
-                                style={{ background: 'linear-gradient(to right, #7BDFF2, #7BDFF2, #B2F7EF)' }}
-                            >
-                                <i className="bi bi-search me-1"></i>
-                                Vérifier dispo
-                            </button>
-                        )}
                     </div>
                 </div>
 
                 {/* Compteur */}
                 <p className="text-sm text-gray-400 font-medium mb-4">
-                    <i class="bi bi-check-circle"></i> {filtered.length} espace{filtered.length > 1 ? 's' : ''} disponible{filtered.length > 1 ? 's' : ''}
+                    <i className="bi bi-check-circle"></i> {filtered.length} espace{filtered.length > 1 ? 's' : ''} disponible{filtered.length > 1 ? 's' : ''}
                 </p>
 
                 {/* Grille */}
@@ -212,9 +188,17 @@ export default function Espaces() {
                         ))}
                     </div>
                 )}
+
+                {/* Pagination */}
+                <Pagination
+                    currentPage={currentPage}
+                    lastPage={lastPage}
+                    onPageChange={(page) => setCurrentPage(page)}
+                />
+
             </main>
 
-            <Footer />
+            
         </div>
     )
 }

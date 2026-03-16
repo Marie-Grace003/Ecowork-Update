@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../contexts/AuthContext'
 import Header from '../../../components/layout/Header/Header'
-import Footer from '../../../components/layout/Footer/Footer'
 import api from '../../../services/api'
 
 const typeBadge = {
@@ -29,7 +28,7 @@ export default function UserDashboard() {
                     api.get('/reservations'),
                 ])
                 setEspaces(espacesRes.data.data || espacesRes.data)
-                setReservations(reservationsRes.data)
+                setReservations(reservationsRes.data.data || reservationsRes.data) // ✅ corrigé
             } catch {
                 console.error('Erreur chargement données')
             } finally {
@@ -123,7 +122,7 @@ export default function UserDashboard() {
 
                         {/* Compteur */}
                         <p className="text-sm text-gray-400 font-medium mb-4">
-                            <i class="bi bi-check-circle"></i> {filteredEspaces.length} espaces disponibles
+                            <i className="bi bi-check-circle"></i> {filteredEspaces.length} espaces disponibles {/* ✅ className corrigé */}
                         </p>
 
                         {/* Grille espaces */}
@@ -150,11 +149,9 @@ export default function UserDashboard() {
                                                     <i className="bi bi-building text-4xl"></i>
                                                 </div>
                                             )}
-                                            {/* Badge type — le post-it rond 😄 */}
                                             <span className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium ${typeBadge[espace.type]?.color}`}>
                                                 {typeBadge[espace.type]?.label}
                                             </span>
-                                            {/* Nom sur la photo */}
                                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
                                                 <h3 className="text-white font-bold">{espace.nom}</h3>
                                             </div>
@@ -167,7 +164,6 @@ export default function UserDashboard() {
                                                 <span>{espace.surface} m²</span>
                                             </div>
 
-                                            {/* Équipements */}
                                             {espace.equipements && espace.equipements.length > 0 && (
                                                 <div className="mb-3">
                                                     <p className="text-xs text-gray-400 mb-2">Équipements inclus</p>
@@ -186,12 +182,10 @@ export default function UserDashboard() {
                                                 </div>
                                             )}
 
-                                            {/* Tarif */}
                                             <p className="text-gray-800 font-bold mb-4">
                                                 {espace.tarif_journalier}€ <span className="text-gray-400 font-normal text-sm">/jour</span>
                                             </p>
 
-                                            {/* Bouton réserver */}
                                             <button
                                                 onClick={() => navigate(`/reservation/${espace.id}`)}
                                                 className="w-full py-2 rounded-xl text-sm font-medium text-gray-800 transition-opacity hover:opacity-90"
@@ -203,7 +197,6 @@ export default function UserDashboard() {
                                     </div>
                                 ))}
                             </div>
-
                         )}
 
                         {/* Bouton voir tous les espaces */}
@@ -265,7 +258,7 @@ export default function UserDashboard() {
                                                 </td>
                                                 <td className="py-3 text-right">
                                                     <button
-                                                        onClick={() => navigate(`/reservation/${r.espace_id}`)}
+                                                        onClick={() => navigate(`/reservations`)}
                                                         className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-eco-blue hover:bg-eco-light transition-all ml-auto"
                                                     >
                                                         <i className="bi bi-pencil"></i>
@@ -292,8 +285,6 @@ export default function UserDashboard() {
                     </div>
                 )}
             </main>
-
-            <Footer />
         </div>
     )
 }

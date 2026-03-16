@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
-import Footer from '../../../components/layout/Footer/Footer'
 import EditReservationModal from './EditReservationModal'
+import Pagination from '../../../components/Pagination'
 import api from '../../../services/api'
 
 export default function MesReservations() {
@@ -10,21 +10,25 @@ export default function MesReservations() {
     const [reservations, setReservations] = useState([])
     const [loading, setLoading] = useState(true)
     const [selectedReservation, setSelectedReservation] = useState(null)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [lastPage, setLastPage] = useState(1)
 
     useEffect(() => {
-        fetchReservations()
-    }, [])
-
-    const fetchReservations = async () => {
-        try {
-            const response = await api.get('/reservations')
-            setReservations(response.data)
-        } catch {
-            console.error('Erreur chargement réservations')
-        } finally {
-            setLoading(false)
+        const fetchReservations = async () => {
+            setLoading(true)
+            try {
+                const response = await api.get(`/reservations?page=${currentPage}`)
+                setReservations(response.data.data || response.data)
+                setLastPage(response.data.last_page || 1)
+            } catch {
+                console.error('Erreur chargement réservations')
+            } finally {
+                setLoading(false)
+            }
         }
-    }
+
+        fetchReservations()
+    }, [currentPage])
 
     const handleDelete = async (id) => {
         if (!confirm('Supprimer cette réservation ?')) return
@@ -42,7 +46,6 @@ export default function MesReservations() {
 
             <main className="flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
 
-                {/* Retour */}
                 <button
                     onClick={() => navigate('/dashboard')}
                     className="flex items-center gap-2 text-gray-500 hover:text-gray-800 text-sm mb-6 transition-all"
@@ -53,7 +56,6 @@ export default function MesReservations() {
 
                 <div className="bg-white rounded-2xl shadow-sm p-6">
 
-                    {/* En-tête */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div>
                             <h1 className="text-2xl font-bold text-gray-800 tracking-tighter">Mes réservations</h1>
@@ -69,7 +71,6 @@ export default function MesReservations() {
                         </button>
                     </div>
 
-                    {/* Tableau */}
                     {loading ? (
                         <p className="text-center text-gray-400 py-8">Chargement...</p>
                     ) : reservations.length === 0 ? (
@@ -118,7 +119,7 @@ export default function MesReservations() {
                                                         : 'bg-eco-pink text-gray-700'
                                                 }`}>
                                                     <i className={`bi ${r.facture_acquittee ? 'bi-check-circle' : 'bi-clock'}`}></i>
-                                                    {r.facture_acquittee ? 'Validée' : 'En attente'}
+                                                    {r.facture_acquittee ? ' Validée' : ' En attente'}
                                                 </span>
                                             </td>
                                             <td className="py-3 text-right">
@@ -143,9 +144,15 @@ export default function MesReservations() {
                             </table>
                         </div>
                     )}
+
+                    {/* Pagination */}
+                    <Pagination
+                        currentPage={currentPage}
+                        lastPage={lastPage}
+                        onPageChange={(page) => setCurrentPage(page)}
+                    />
                 </div>
 
-                {/* Modal modification - à créer */}
                 {selectedReservation && (
                     <EditReservationModal
                         reservation={selectedReservation}
@@ -158,7 +165,6 @@ export default function MesReservations() {
                 )}
             </main>
 
-            <Footer />
         </div>
     )
 }

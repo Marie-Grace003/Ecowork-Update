@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
-import Footer from '../../../components/layout/Footer/Footer'
 import api from '../../../services/api'
 
 const typeBadge = {
@@ -94,7 +93,7 @@ export default function Reservation() {
                     </button>
                 </div>
             </main>
-            <Footer />
+            
         </div>
     )
 
@@ -223,20 +222,21 @@ export default function Reservation() {
                                     Annuler
                                 </button>
                                 <button
+                                  
                                     type="submit"
+                                    
                                     disabled={submitting || nbJours === 0}
                                     className="flex-1 py-3 rounded-lg text-sm font-medium text-gray-800"
                                     style={{ background: 'linear-gradient(to right, #7BDFF2, #7BDFF2, #B2F7EF)' }}
                                 >
                                     {submitting ? 'Réservation...' : 'Confirmer la réservation'}
+                                    
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </main>
-
-            <Footer />
         </div>
     )
 }

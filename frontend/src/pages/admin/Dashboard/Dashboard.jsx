@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
 import api from '../../../services/api'
-import Footer from '../../../components/layout/Footer/Footer'
 
 export default function AdminDashboard() {
   const navigate = useNavigate()
@@ -21,9 +20,9 @@ export default function AdminDashboard() {
           api.get('/admin/reservations'),
         ])
         setStats({
-          utilisateurs: users.data.length,
-          espaces: espaces.data.data?.length || espaces.data.length,
-          reservations: reservations.data.length,
+        utilisateurs: users.data.total ?? users.data.length ?? 0,
+    espaces: espaces.data.total ?? espaces.data.data?.length ?? espaces.data.length ?? 0,
+    reservations: reservations.data.total ?? reservations.data.length ?? 0,
         })
       } catch {
         console.error('Erreur chargement stats')
@@ -131,8 +130,6 @@ export default function AdminDashboard() {
         </div>
 
       </main>
-
-      <Footer />
     </div>
   )
 }

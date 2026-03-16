@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
-import Footer from '../../../components/layout/Footer/Footer'
+import Pagination from '../../../components/Pagination'
 import api from '../../../services/api'
 
 export default function AdminReservations() {
@@ -9,21 +9,27 @@ export default function AdminReservations() {
     const [reservations, setReservations] = useState([])
     const [loading, setLoading] = useState(true)
     const [filterDate, setFilterDate] = useState('')
+    const [currentPage, setCurrentPage] = useState(1)
+    const [lastPage, setLastPage] = useState(1)
 
     useEffect(() => {
-        fetchReservations()
-    }, [])
-
-    const fetchReservations = async () => {
-        try {
-            const response = await api.get('/admin/reservations')
-            setReservations(response.data)
-        } catch {
-            console.error('Erreur chargement réservations')
-        } finally {
-            setLoading(false)
+        const fetchReservations = async () => {
+            setLoading(true)
+            try {
+                let url = `/admin/reservations?page=${currentPage}`
+                if (filterDate) url += `&date_debut=${filterDate}&date_fin=${filterDate}`
+                const response = await api.get(url)
+                setReservations(response.data.data || response.data)
+                setLastPage(response.data.last_page || 1)
+            } catch {
+                console.error('Erreur chargement réservations')
+            } finally {
+                setLoading(false)
+            }
         }
-    }
+
+        fetchReservations()
+    }, [currentPage, filterDate])
 
     const handleDelete = async (id) => {
         if (!confirm('Supprimer cette réservation ?')) return
@@ -48,17 +54,12 @@ export default function AdminReservations() {
         }
     }
 
-    const filtered = filterDate
-        ? reservations.filter(r => r.date_debut <= filterDate && r.date_fin >= filterDate)
-        : reservations
-
     return (
         <div className="min-h-screen bg-eco-light flex flex-col">
             <Header />
 
             <main className="flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
 
-                {/* Retour */}
                 <button
                     onClick={() => navigate('/admin/dashboard')}
                     className="flex items-center gap-2 text-gray-500 hover:text-gray-800 text-sm mb-6 transition-all"
@@ -67,10 +68,8 @@ export default function AdminReservations() {
                     Retour au tableau de bord
                 </button>
 
-                {/* Card principale */}
                 <div className="bg-white rounded-2xl shadow-sm p-6">
 
-                    {/* En-tête */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div className="flex items-center gap-2">
                             <i className="bi bi-calendar3 text-eco-blue text-xl"></i>
@@ -81,12 +80,12 @@ export default function AdminReservations() {
                             <input
                                 type="date"
                                 value={filterDate}
-                                onChange={(e) => setFilterDate(e.target.value)}
+                                onChange={(e) => { setFilterDate(e.target.value); setCurrentPage(1) }}
                                 className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-eco-blue bg-eco-light"
                             />
                             {filterDate && (
                                 <button
-                                    onClick={() => setFilterDate('')}
+                                    onClick={() => { setFilterDate(''); setCurrentPage(1) }}
                                     className="text-gray-400 hover:text-gray-600 text-sm"
                                 >
                                     <i className="bi bi-x-circle"></i>
@@ -95,10 +94,9 @@ export default function AdminReservations() {
                         </div>
                     </div>
 
-                    {/* Tableau */}
                     {loading ? (
                         <p className="text-center text-gray-400 py-8">Chargement...</p>
-                    ) : filtered.length === 0 ? (
+                    ) : reservations.length === 0 ? (
                         <p className="text-center text-gray-400 py-8">Aucune réservation trouvée</p>
                     ) : (
                         <div className="overflow-x-auto">
@@ -115,7 +113,7 @@ export default function AdminReservations() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filtered.map((r) => (
+                                    {reservations.map((r) => (
                                         <tr key={r.id} className="border-b border-gray-50 hover:bg-eco-light transition-all">
                                             <td className="py-3 text-sm font-medium text-gray-800">
                                                 {r.user?.prenom} {r.user?.nom}
@@ -142,18 +140,16 @@ export default function AdminReservations() {
                                                     }`}
                                                 >
                                                     <i className={`bi ${r.facture_acquittee ? 'bi-check-circle' : 'bi-clock'}`}></i>
-                                                    {r.facture_acquittee ? 'Validée' : 'En attente'}
+                                                    {r.facture_acquittee ? ' Validée' : ' En attente'}
                                                 </button>
                                             </td>
                                             <td className="py-3 text-right">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <button
-                                                        onClick={() => handleDelete(r.id)}
-                                                        className="w-8 h-8 rounded-lg flex items-center justify-center text-white bg-red-500"
-                                                    >
-                                                        <i className="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
+                                                <button
+                                                    onClick={() => handleDelete(r.id)}
+                                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-white bg-red-500"
+                                                >
+                                                    <i className="bi bi-trash"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
@@ -161,10 +157,15 @@ export default function AdminReservations() {
                             </table>
                         </div>
                     )}
+
+                    {/* Pagination */}
+                    <Pagination
+                        currentPage={currentPage}
+                        lastPage={lastPage}
+                        onPageChange={(page) => setCurrentPage(page)}
+                    />
                 </div>
             </main>
-
-            <Footer />
         </div>
     )
 }

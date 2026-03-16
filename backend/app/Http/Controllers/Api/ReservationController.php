@@ -7,24 +7,28 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    // GET /api/reservations — liste les réservations de l'utilisateur connecté
+    // GET /api/reservations — liste les réservations de l'utilisateur connecté (PAGINÉ)
     public function index(Request $request)
     {
         $reservations = Reservation::with(['espace'])
             ->where('user_id', $request->user()->id)
-            ->get();
+            ->paginate(10);
+
         return response()->json($reservations);
     }
 
-    // GET /api/admin/reservations — liste toutes les réservations (admin)
+    // GET /api/admin/reservations — liste toutes les réservations (admin) (PAGINÉ)
     public function adminIndex(Request $request)
     {
         $query = Reservation::with(['user', 'espace']);
+
         if ($request->has('date_debut') && $request->has('date_fin')) {
             $query->where('date_debut', '>=', $request->date_debut)
                   ->where('date_fin', '<=', $request->date_fin);
         }
-        return response()->json($query->get());
+
+
+        return response()->json($query->paginate(10));
     }
 
     // POST /api/reservations — créer une réservation
@@ -100,7 +104,7 @@ class ReservationController extends Controller
                 'message' => 'Cet espace est déjà réservé pour ces dates'
             ], 409);
         }
-     // — Calcul automatique
+
         $espace = Espace::findOrFail($reservation->espace_id);
         $debut  = \Carbon\Carbon::parse($request->date_debut);
         $fin    = \Carbon\Carbon::parse($request->date_fin);

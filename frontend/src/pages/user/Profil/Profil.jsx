@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../contexts/AuthContext'
 import Header from '../../../components/layout/Header/Header'
-import Footer from '../../../components/layout/Footer/Footer'
 import api from '../../../services/api'
 
 export default function Profil() {
@@ -244,8 +243,6 @@ export default function Profil() {
                     </form>
                 </div>
             </main>
-
-            <Footer />
         </div>
     )
 }

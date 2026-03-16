@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
 import EditUserModal from './EditUserModal'
+import Pagination from '../../../components/Pagination'
 import api from '../../../services/api'
-import Footer from '../../../components/layout/Footer/Footer'
 
 export default function AdminUsers() {
     const navigate = useNavigate()
@@ -11,21 +11,25 @@ export default function AdminUsers() {
     const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(true)
     const [selectedUser, setSelectedUser] = useState(null)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [lastPage, setLastPage] = useState(1)
 
     useEffect(() => {
-        fetchUsers()
-    }, [])
-
-    const fetchUsers = async () => {
-        try {
-            const response = await api.get('/admin/users')
-            setUsers(response.data)
-        } catch {
-            console.error('Erreur chargement utilisateurs')
-        } finally {
-            setLoading(false)
+        const fetchUsers = async () => {
+            setLoading(true)
+            try {
+                const response = await api.get(`/admin/users?page=${currentPage}`)
+                setUsers(response.data.data || response.data)
+                setLastPage(response.data.last_page || 1)
+            } catch {
+                console.error('Erreur chargement utilisateurs')
+            } finally {
+                setLoading(false)
+            }
         }
-    }
+
+        fetchUsers()
+    }, [currentPage])
 
     const handleDelete = async (id) => {
         if (!confirm('Supprimer cet utilisateur ?')) return
@@ -47,7 +51,6 @@ export default function AdminUsers() {
 
             <main className="max-w-7xl mx-auto px-6 py-8">
 
-                {/* Retour */}
                 <button
                     onClick={() => navigate('/admin/dashboard')}
                     className="flex items-center gap-2 text-gray-500 hover:text-gray-800 text-sm mb-6 transition-all"
@@ -56,10 +59,8 @@ export default function AdminUsers() {
                     Retour au tableau de bord
                 </button>
 
-                {/* Card principale */}
                 <div className="bg-white rounded-2xl shadow-sm p-6">
 
-                    {/* En-tête */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div>
                             <h1 className="text-2xl font-bold text-gray-800 tracking-tighter">Gestion des utilisateurs</h1>
@@ -87,7 +88,6 @@ export default function AdminUsers() {
                         />
                     </div>
 
-                    {/* Tableau */}
                     {loading ? (
                         <p className="text-center text-gray-400 py-8">Chargement...</p>
                     ) : filtered.length === 0 ? (
@@ -135,9 +135,15 @@ export default function AdminUsers() {
                             </table>
                         </div>
                     )}
+
+                    {/* Pagination */}
+                    <Pagination
+                        currentPage={currentPage}
+                        lastPage={lastPage}
+                        onPageChange={(page) => setCurrentPage(page)}
+                    />
                 </div>
             </main>
-
 
             {selectedUser && (
                 <EditUserModal
@@ -149,8 +155,6 @@ export default function AdminUsers() {
                     }}
                 />
             )}
-
-            <Footer />
         </div>
     )
 }
