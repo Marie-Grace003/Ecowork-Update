@@ -80,7 +80,7 @@ class ReservationController extends Controller
     }
 
     // PUT /api/reservations/{id} — modifier sa propre réservation (utilisateur)
-    public function userUpdate(Request $request, $id)
+    public function userUpdate(Request $request, $id) 
     {
         $reservation = Reservation::findOrFail($id);
 

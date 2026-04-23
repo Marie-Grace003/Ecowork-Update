@@ -28,7 +28,7 @@ export default function UserDashboard() {
                     api.get('/reservations'),
                 ])
                 setEspaces(espacesRes.data.data || espacesRes.data)
-                setReservations(reservationsRes.data.data || reservationsRes.data) // ✅ corrigé
+                setReservations(reservationsRes.data.data || reservationsRes.data) 
             } catch {
                 console.error('Erreur chargement données')
             } finally {
@@ -122,7 +122,7 @@ export default function UserDashboard() {
 
                         {/* Compteur */}
                         <p className="text-sm text-gray-400 font-medium mb-4">
-                            <i className="bi bi-check-circle"></i> {filteredEspaces.length} espaces disponibles {/* ✅ className corrigé */}
+                            <i className="bi bi-check-circle"></i> {filteredEspaces.length} espaces disponibles
                         </p>
 
                         {/* Grille espaces */}
@@ -253,7 +253,7 @@ export default function UserDashboard() {
                                                         ? 'bg-eco-mint text-gray-700'
                                                         : 'bg-eco-pink text-gray-700'
                                                         }`}>
-                                                        {r.facture_acquittee ? '✓ Payé' : '⏳ En attente'}
+                                                        {r.facture_acquittee ? 'bi-check-circle Payé' : 'bi-clock En attente'}
                                                     </span>
                                                 </td>
                                                 <td className="py-3 text-right">
