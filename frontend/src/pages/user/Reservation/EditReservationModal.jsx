@@ -108,7 +108,7 @@ export default function EditReservationModal({ reservation, onClose, onUpdated }
                         <button
                             type="submit"
                             disabled={loading || nbJours === 0}
-                            className="flex-1 py-3 rounded-lg text-sm font-medium text-gray-800"
+                            className="flex-1 py-3 rounded-lg text-sm font-medium text-gray-800 cursor-pointer"
                             style={{ background: 'linear-gradient(to right, #B2F7EF, #7BDFF2, #B2F7EF)' }}
                         >
                             {loading ? 'Modification...' : 'Enregistrer'}

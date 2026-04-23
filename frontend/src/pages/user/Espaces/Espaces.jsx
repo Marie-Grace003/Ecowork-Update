@@ -126,7 +126,7 @@ export default function Espaces() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filtered.map((espace) => (
-                            <div key={espace.id} className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-all">
+                            <div key={espace.id} className="bg-white rounded-2xl shadow-sm hover:shadow-gray-500 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group">
                                 <div className="relative h-48 bg-eco-light">
                                     {espace.photos && espace.photos.length > 0 ? (
                                         <img
@@ -178,7 +178,7 @@ export default function Espaces() {
 
                                     <button
                                         onClick={() => navigate(`/reservation/${espace.id}`)}
-                                        className="w-full py-2 rounded-xl text-sm font-medium text-gray-800 transition-opacity hover:opacity-90"
+                                        className="w-full py-2 rounded-xl text-sm font-medium text-gray-800 transition-all hover:opacity-90 cursor-pointer hover:scale-[1.02]"
                                         style={{ background: 'linear-gradient(to right, #7BDFF2, #B2F7EF, #7BDFF2)' }}
                                     >
                                         Réserver cet espace

@@ -63,7 +63,7 @@ export default function MesReservations() {
                         </div>
                         <button
                             onClick={() => navigate('/espaces')}
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-800 text-sm font-medium transition-opacity hover:opacity-90"
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-800 text-sm font-medium transition-all hover:opacity-90 cursor-pointer hover:scale-[1.02]"
                             style={{ background: 'linear-gradient(to left, #7BDFF2, #7BDFF2, #B2F7EF)' }}
                         >
                             <i className="bi bi-plus-circle"></i>
@@ -76,13 +76,7 @@ export default function MesReservations() {
                     ) : reservations.length === 0 ? (
                         <div className="text-center py-12">
                             <i className="bi bi-calendar-x text-4xl text-gray-300 mb-3 block"></i>
-                            <p className="text-gray-400 mb-4">Aucune réservation pour le moment</p>
-                            <button
-                                onClick={() => navigate('/espaces')}
-                                className="px-6 py-3 rounded-xl text-gray-800 text-sm font-medium bg-teal-200"
-                            >
-                                Découvrir les espaces
-                            </button>
+                            <p className="text-gray-400 mb-4">Aucune réservation pour le moment.</p>
                         </div>
                     ) : (
                         <div className="overflow-x-auto">
@@ -126,13 +120,13 @@ export default function MesReservations() {
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
                                                         onClick={() => setSelectedReservation(r)}
-                                                        className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-800 bg-eco-mint"
+                                                        className="w-8 h-8 rounded-lg cursor-pointer flex items-center justify-center text-gray-800 bg-eco-mint"
                                                     >
                                                         <i className="bi bi-pencil"></i>
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(r.id)}
-                                                        className="w-8 h-8 rounded-lg flex items-center justify-center text-white bg-red-500"
+                                                        className="w-8 h-8 rounded-lg cursor-pointer flex items-center justify-center text-white bg-red-500"
                                                     >
                                                         <i className="bi bi-trash"></i>
                                                     </button>
