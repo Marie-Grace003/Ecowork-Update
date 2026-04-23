@@ -73,7 +73,7 @@ export default function AdminEspaces() {
                         <h1 className="text-2xl font-bold text-gray-800 tracking-tighter">Gestion des espaces</h1>
                         <button
                             onClick={() => navigate('/admin/espaces/create')}
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-800 text-sm font-medium transition-opacity hover:opacity-90"
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-800 text-sm font-medium transition-all hover:scale-[1.02] hover:opacity-90 cursor-pointer"
                             style={{ background: 'linear-gradient(to right, #7BDFF2, #7BDFF2, #B2F7EF)' }}
                         >
                             <i className="bi bi-plus-circle"></i>
@@ -166,13 +166,13 @@ export default function AdminEspaces() {
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => setSelectedEspace(espace)}
-                                                className="flex-1 py-2 rounded-xl text-sm font-medium text-gray-600 border border-gray-200 hover:bg-eco-mint hover:text-gray-800 transition-all"
+                                                className="flex-1 py-2 rounded-xl cursor-pointer text-sm font-medium text-gray-600 border border-gray-200 hover:bg-eco-mint hover:text-gray-800 transition-all"
                                             >
                                                 Modifier
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(espace.id)}
-                                                className="flex-1 py-2 rounded-xl text-sm font-medium text-white bg-red-500"
+                                                className="flex-1 py-2 rounded-xl text-sm cursor-pointer font-medium text-white bg-red-500"
                                             >
                                                 Supprimer
                                             </button>

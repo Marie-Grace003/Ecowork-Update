@@ -68,7 +68,7 @@ export default function AdminUsers() {
                         </div>
                         <button
                             onClick={() => navigate('/admin/users/create')}
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-800 text-sm font-medium transition-opacity hover:opacity-90"
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-800 text-sm font-medium transition-all hover:scale-[1.02] hover:opacity-90 cursor-pointer"
                             style={{ background: 'linear-gradient(to left, #7BDFF2, #7BDFF2, #B2F7EF)' }}
                         >
                             <i className="bi bi-plus-circle"></i>
@@ -117,13 +117,13 @@ export default function AdminUsers() {
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
                                                         onClick={() => setSelectedUser(user)}
-                                                        className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-800 bg-eco-pink"
+                                                        className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-800 bg-eco-pink cursor-pointer"
                                                     >
                                                         <i className="bi bi-pencil"></i>
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(user.id)}
-                                                        className="w-8 h-8 rounded-lg flex items-center justify-center text-red-300 bg-red-500"
+                                                        className="w-8 h-8 rounded-lg flex items-center justify-center text-red-300 bg-red-500 cursor-pointer"
                                                     >
                                                         <i className="bi bi-trash"></i>
                                                     </button>

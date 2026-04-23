@@ -162,7 +162,7 @@ export default function Profil() {
                             />
                         </div>
 
-                        {/* Mot de passe uniquement en mode édition */}
+
                         {editing && (
                             <div className="space-y-3">
                                 <p className="text-sm font-medium text-gray-700">Modifier le mot de passe <span className="text-gray-400 font-normal">(optionnel)</span></p>
@@ -224,7 +224,7 @@ export default function Profil() {
                                     <button
                                         type="button"
                                         onClick={() => setEditing(true)}
-                                        className="flex-1 py-3 rounded-lg text-sm font-medium text-gray-800 transition-opacity hover:opacity-90 bg-eco-pink"
+                                        className="flex-1 py-3 cursor-pointer rounded-lg text-sm font-medium text-gray-800 transition-opacity hover:opacity-90 bg-eco-pink"
                                     >
                                         <i className="bi bi-pencil me-2"></i>
                                         Modifier
@@ -232,7 +232,7 @@ export default function Profil() {
                                     <button
                                         type="button"
                                         onClick={handleDelete}
-                                        className="flex-1 py-3 rounded-lg text-sm font-medium text-white bg-red-500"
+                                        className="flex-1 py-3 cursor-pointer rounded-lg text-sm font-medium text-white bg-red-500"
                                     >
                                         <i className="bi bi-trash me-2"></i>
                                         Supprimer

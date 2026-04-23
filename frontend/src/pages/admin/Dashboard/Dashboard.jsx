@@ -98,7 +98,7 @@ export default function AdminDashboard() {
                 <button
                   key={action.path}
                   onClick={() => navigate(action.path)}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-100 hover:bg-eco-light transition-all text-sm text-gray-700"
+                  className="w-full cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-100 hover:bg-eco-light transition-all text-sm text-gray-700"
                 >
                   <span>{action.icon}</span>
                   {action.label}
@@ -107,18 +107,19 @@ export default function AdminDashboard() {
             </div>
           </div>
 
+          {/* Créations rapides */}
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <h2 className="text-lg font-bold text-gray-800 tracking-tighter mb-1">Créations rapides</h2>
             <p className="text-gray-400 text-sm mb-4">Ajoutez de nouveaux éléments</p>
             <div className="space-y-2">
               {[
-                { label: 'Créer un nouvel espace', path: '/admin/espaces', icon: '+' },
-                { label: 'Créer un administrateur', path: '/admin/users', icon: '+' },
+                { label: 'Créer un nouvel espace', path: '/admin/espaces/create', icon: '+' },
+                { label: 'Créer un administrateur', path: '/admin/users/create', icon: '+' },
               ].map((action) => (
                 <button
                   key={action.label}
                   onClick={() => navigate(action.path)}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-800 text-sm font-medium transition-opacity hover:opacity-90"
+                  className="w-full flex items-center cursor-pointer gap-3 px-4 py-3 rounded-xl text-gray-800 text-sm font-medium transition-all hover:scale-[1.02] hover:opacity-90"
                   style={{ background: 'linear-gradient(to left, #7BDFF2, #7BDFF2, #B2F7EF)' }}
                 >
                   <span>{action.icon}</span>

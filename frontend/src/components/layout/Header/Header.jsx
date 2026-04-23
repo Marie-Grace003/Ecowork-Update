@@ -105,7 +105,7 @@ export default function Header() {
                 <div className="relative hidden md:block" ref={dropdownRef}>
                     <button
                         onClick={() => setDropdownOpen(!dropdownOpen)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-50 transition-all"
+                        className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-50 transition-all cursor-pointer"
                     >
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
                             style={{ background: 'linear-gradient(to right, #7BDFF2, #B2F7EF)' }}

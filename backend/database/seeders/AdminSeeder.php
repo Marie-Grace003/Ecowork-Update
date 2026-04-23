@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
             [
                 'nom'          => 'Admin',
                 'prenom'       => 'EcoWork',
-                'mot_de_passe' => Hash::make('admin123'),
+                'mot_de_passe' => Hash::make('Admin123'),
                 'type'         => 'admin',
                 'telephone'    => '0600000000',
                 'adresse'      => '11 rue de la Paix, Paris',
