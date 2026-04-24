@@ -9,10 +9,8 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-eco-light flex flex-col items-center justify-center px-4 py-8">
 
-      {/* Card principale qui contient tout */}
       <div className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8">
 
-        {/* Logo */}
         <div className="flex justify-center mb-2">
           <img
             src={logo}
@@ -26,7 +24,7 @@ export default function AuthPage() {
         <div className="bg-eco-light rounded-full p-1 flex mb-6">
           <button
             onClick={() => setActiveTab('login')}
-            className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'login'
+            className={`flex-1 py-2 cursor-pointer rounded-full text-sm font-medium transition-all ${activeTab === 'login'
               ? 'text-white'
               : 'text-gray-500'
               }`}
@@ -38,7 +36,7 @@ export default function AuthPage() {
           </button>
           <button
             onClick={() => setActiveTab('register')}
-            className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'register'
+            className={`flex-1 py-2 cursor-pointer rounded-full text-sm font-medium transition-all ${activeTab === 'register'
               ? 'text-white'
               : 'text-gray-500'
               }`}

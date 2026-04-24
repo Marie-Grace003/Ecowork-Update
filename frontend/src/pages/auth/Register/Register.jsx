@@ -124,7 +124,7 @@ export default function Register() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full text-white py-3 rounded-lg font-medium transition-opacity disabled:opacity-50"
+          className="w-full text-white py-3 rounded-lg font-medium transition-all hover:scale-[1.02] disabled:opacity-50 cursor-pointer"
           style={{ background: 'linear-gradient(to right, #7BDFF2, #7BDFF2, #B2F7EF)' }}
         >
           {loading ? 'Inscription...' : "S'inscrire"}
