@@ -127,20 +127,19 @@ class EspaceController extends Controller
         return response()->json($espace->load(['equipements', 'photos']));
     }
 
-    // DELETE /api/admin/espaces/{id} — supprimer un espace (admin)
-    public function destroy($id)
-    {
-        $espace = Espace::findOrFail($id);
+    // DELETE /api/admin/espaces/{id} — soft delete (admin)
+public function destroy($id)
+{
+    $espace = Espace::findOrFail($id);
 
-        // Supprimer les fichiers photos du stockage
-        foreach ($espace->photos as $photo) {
-            Storage::disk('public')->delete($photo->chemin);
-        }
+    // On ne supprime plus les fichiers physiques
+    // car l'espace est juste désactivé, pas vraiment supprimé
+    $espace->delete(); // ← remplit deleted_at
 
-        $espace->delete();
-       Cache::forget('espaces');
-        return response()->json(['message' => 'Espace supprimé avec succès']);
-    }
+    Cache::forget('espaces');
+
+    return response()->json(['message' => 'Espace désactivé avec succès']);
+}
 
     // DELETE /api/admin/espaces/photos/{id} — supprimer une photo (admin)
     public function destroyPhoto($id)

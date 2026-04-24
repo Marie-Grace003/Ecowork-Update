@@ -22,11 +22,11 @@ class ReservationController extends Controller
     {
         $query = Reservation::with(['user', 'espace']);
 
+        // Filtre par date
         if ($request->has('date_debut') && $request->has('date_fin')) {
-            $query->where('date_debut', '>=', $request->date_debut)
-                  ->where('date_fin', '<=', $request->date_fin);
+            $query->where('date_debut', '<=', $request->date_fin)  // ✅ corrigé
+                  ->where('date_fin', '>=', $request->date_debut); // ✅ corrigé
         }
-
 
         return response()->json($query->paginate(10));
     }
@@ -40,6 +40,7 @@ class ReservationController extends Controller
             'date_fin'   => 'required|date|after:date_debut',
         ]);
 
+        // Vérifier la disponibilité
         $conflit = Reservation::where('espace_id', $request->espace_id)
             ->where('date_debut', '<=', $request->date_fin)
             ->where('date_fin', '>=', $request->date_debut)
@@ -51,6 +52,7 @@ class ReservationController extends Controller
             ], 409);
         }
 
+        // Calculer le prix total
         $espace = Espace::findOrFail($request->espace_id);
         $debut  = \Carbon\Carbon::parse($request->date_debut);
         $fin    = \Carbon\Carbon::parse($request->date_fin);
@@ -80,10 +82,11 @@ class ReservationController extends Controller
     }
 
     // PUT /api/reservations/{id} — modifier sa propre réservation (utilisateur)
-    public function userUpdate(Request $request, $id) 
+    public function userUpdate(Request $request, $id)
     {
         $reservation = Reservation::findOrFail($id);
 
+        // Vérifier que c'est bien sa réservation
         if ($reservation->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Non autorisé'], 403);
         }
@@ -93,6 +96,7 @@ class ReservationController extends Controller
             'date_fin'   => 'required|date|after:date_debut',
         ]);
 
+        // Vérifier la disponibilité en excluant la réservation actuelle
         $conflit = Reservation::where('espace_id', $reservation->espace_id)
             ->where('id', '!=', $id)
             ->where('date_debut', '<=', $request->date_fin)
@@ -105,6 +109,7 @@ class ReservationController extends Controller
             ], 409);
         }
 
+        // Recalculer le prix total
         $espace = Espace::findOrFail($reservation->espace_id);
         $debut  = \Carbon\Carbon::parse($request->date_debut);
         $fin    = \Carbon\Carbon::parse($request->date_fin);
@@ -126,6 +131,7 @@ class ReservationController extends Controller
     {
         $reservation = Reservation::findOrFail($id);
 
+        // Un utilisateur ne peut supprimer que ses propres réservations
         if (!$request->user()->isAdmin() && $reservation->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Non autorisé'], 403);
         }

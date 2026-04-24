@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     // GET /api/admin/users — liste tous les utilisateurs (admin)
+    // SoftDeletes exclut automatiquement les users supprimés
     public function index()
     {
         $users = User::where('type', 'user')->paginate(10);
@@ -72,7 +73,7 @@ class UserController extends Controller
         return response()->json(['message' => 'Mot de passe modifié avec succès']);
     }
 
-    // DELETE /api/users/{id} — supprimer un compte
+    // DELETE /api/users/{id} — soft delete
     public function destroy(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -82,7 +83,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Non autorisé'], 403);
         }
 
-        $user->delete();
+        $user->delete(); // ← remplit deleted_at, ne supprime pas vraiment
 
         return response()->json(['message' => 'Compte supprimé avec succès']);
     }

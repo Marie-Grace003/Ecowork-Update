@@ -9,6 +9,7 @@ export default function AdminReservations() {
     const [reservations, setReservations] = useState([])
     const [loading, setLoading] = useState(true)
     const [filterDate, setFilterDate] = useState('')
+    const [search, setSearch] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
     const [lastPage, setLastPage] = useState(1)
 
@@ -54,6 +55,13 @@ export default function AdminReservations() {
         }
     }
 
+    // Filtre côté React sur les données déjà chargées
+    const filtered = reservations.filter(r =>
+        `${r.user?.prenom} ${r.user?.nom} ${r.espace?.nom}`
+            .toLowerCase()
+            .includes(search.toLowerCase())
+    )
+
     return (
         <div className="min-h-screen bg-eco-light flex flex-col">
             <Header />
@@ -70,34 +78,89 @@ export default function AdminReservations() {
 
                 <div className="bg-white rounded-2xl shadow-sm p-6">
 
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                        <div className="flex items-center gap-2">
-                            <i className="bi bi-calendar3 text-eco-blue text-xl"></i>
-                            <h1 className="text-2xl font-bold text-gray-800 tracking-tighter">Gestion des réservations</h1>
+                    <div className="flex items-center gap-2 mb-6">
+                        <i className="bi bi-calendar3 text-eco-blue text-xl"></i>
+                        <h1 className="text-2xl font-bold text-gray-800 tracking-tighter">Gestion des réservations</h1>
+                    </div>
+
+                    {/* Filtres avec labels */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+                        {/* Recherche par utilisateur ou espace */}
+                        <div className="flex flex-col gap-1">
+                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                
+                                Rechercher par utilisateur ou espace
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    placeholder="Ex : Marie Dupont, Salle Zen..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="w-full pl-4 pr-9 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-eco-blue bg-eco-light"
+                                />
+                                {search && (
+                                    <button
+                                        onClick={() => setSearch('')}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    >
+                                        <i className="bi bi-x-circle"></i>
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <label className="text-sm text-gray-500">Filtrer par date :</label>
-                            <input
-                                type="date"
-                                value={filterDate}
-                                onChange={(e) => { setFilterDate(e.target.value); setCurrentPage(1) }}
-                                className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-eco-blue bg-eco-light"
-                            />
-                            {filterDate && (
-                                <button
-                                    onClick={() => { setFilterDate(''); setCurrentPage(1) }}
-                                    className="text-gray-400 hover:text-gray-600 text-sm"
-                                >
-                                    <i className="bi bi-x-circle"></i>
-                                </button>
-                            )}
+
+                        {/* Filtre par date */}
+                        <div className="flex flex-col gap-1">
+                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                
+                                Filtrer par date de réservation
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="date"
+                                    value={filterDate}
+                                    onChange={(e) => { setFilterDate(e.target.value); setCurrentPage(1) }}
+                                    className="w-full pl-4 pr-9 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-eco-blue bg-eco-light"
+                                />
+                                {filterDate && (
+                                    <button
+                                        onClick={() => { setFilterDate(''); setCurrentPage(1) }}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    >
+                                        <i className="bi bi-x-circle"></i>
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
 
+                    {/* Compteur résultats */}
+                    {!loading && (
+                        <p className="text-xs text-gray-400 mb-4">
+                            <i className="bi bi-funnel me-1"></i>
+                            {filtered.length} réservation{filtered.length > 1 ? 's' : ''} trouvée{filtered.length > 1 ? 's' : ''}
+                            {search && <span className="ml-1">pour "<span className="text-gray-600">{search}</span>"</span>}
+                            {filterDate && <span className="ml-1">— le <span className="text-gray-600">{new Date(filterDate).toLocaleDateString('fr-FR')}</span></span>}
+                        </p>
+                    )}
+
                     {loading ? (
                         <p className="text-center text-gray-400 py-8">Chargement...</p>
-                    ) : reservations.length === 0 ? (
-                        <p className="text-center text-gray-400 py-8">Aucune réservation trouvée</p>
+                    ) : filtered.length === 0 ? (
+                        <div className="text-center py-12">
+                            <i className="bi bi-calendar-x text-4xl text-gray-300 mb-3 block"></i>
+                            <p className="text-gray-400">Aucune réservation trouvée</p>
+                            {(search || filterDate) && (
+                                <button
+                                    onClick={() => { setSearch(''); setFilterDate(''); setCurrentPage(1) }}
+                                    className="mt-3 text-sm text-eco-blue hover:underline"
+                                >
+                                    Effacer les filtres
+                                </button>
+                            )}
+                        </div>
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full">
@@ -113,7 +176,7 @@ export default function AdminReservations() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {reservations.map((r) => (
+                                    {filtered.map((r) => (
                                         <tr key={r.id} className="border-b border-gray-50 hover:bg-eco-light transition-all">
                                             <td className="py-3 text-sm font-medium text-gray-800">
                                                 {r.user?.prenom} {r.user?.nom}
@@ -158,7 +221,6 @@ export default function AdminReservations() {
                         </div>
                     )}
 
-                    {/* Pagination */}
                     <Pagination
                         currentPage={currentPage}
                         lastPage={lastPage}
