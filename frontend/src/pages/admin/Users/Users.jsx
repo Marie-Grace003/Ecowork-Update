@@ -18,7 +18,8 @@ export default function AdminUsers() {
         const fetchUsers = async () => {
             setLoading(true)
             try {
-                const response = await api.get(`/admin/users?page=${currentPage}`)
+                const response = await api.get(`/admin/users?page=${currentPage}`) 
+                console.log('Réponse users:', response.data)
                 setUsers(response.data.data || response.data)
                 setLastPage(response.data.last_page || 1)
             } catch {

@@ -4,6 +4,7 @@ import Header from '../../../components/layout/Header/Header'
 import EditEspaceModal from './EditEspaceModal'
 import Pagination from '../../../components/Pagination'
 import api from '../../../services/api'
+import { useToast } from '../../../contexts/useToast'
 
 const typeBadge = {
     bureau: { label: 'Bureau', color: 'bg-eco-blue text-white' },
@@ -13,6 +14,7 @@ const typeBadge = {
 
 export default function AdminEspaces() {
     const navigate = useNavigate()
+    const { addToast } = useToast()
     const [espaces, setEspaces] = useState([])
     const [search, setSearch] = useState('')
     const [filterType, setFilterType] = useState('')
@@ -31,7 +33,7 @@ export default function AdminEspaces() {
                 setEspaces(response.data.data || response.data)
                 setLastPage(response.data.last_page || 1)
             } catch {
-                console.error('Erreur chargement espaces')
+                addToast('Erreur lors du chargement des espaces', 'error')
             } finally {
                 setLoading(false)
             }
@@ -45,8 +47,9 @@ export default function AdminEspaces() {
         try {
             await api.delete(`/admin/espaces/${id}`)
             setEspaces(espaces.filter(e => e.id !== id))
+            addToast('Espace supprimé avec succès', 'success')
         } catch {
-            console.error('Erreur suppression')
+            addToast('Erreur lors de la suppression', 'error')
         }
     }
 
@@ -183,7 +186,6 @@ export default function AdminEspaces() {
                         </div>
                     )}
 
-                    {/* Pagination */}
                     <Pagination
                         currentPage={currentPage}
                         lastPage={lastPage}
@@ -198,6 +200,7 @@ export default function AdminEspaces() {
                         onUpdated={(updated) => {
                             setEspaces(espaces.map(e => e.id === updated.id ? updated : e))
                             setSelectedEspace(null)
+                            addToast('Espace modifié avec succès', 'success')
                         }}
                     />
                 )}

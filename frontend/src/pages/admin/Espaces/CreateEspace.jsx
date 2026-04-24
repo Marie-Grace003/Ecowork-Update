@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../components/layout/Header/Header'
 import api from '../../../services/api'
+import { useToast } from '../../../contexts/useToast'
 
 export default function CreateEspace() {
     const navigate = useNavigate()
+    const { addToast } = useToast()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [equipements, setEquipements] = useState([])
@@ -28,6 +30,7 @@ export default function CreateEspace() {
         )
     }
 
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
@@ -47,9 +50,11 @@ export default function CreateEspace() {
             await api.post('/admin/espaces', data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             })
+            addToast('Espace créé avec succès !', 'success')
             navigate('/admin/espaces')
         } catch {
             setError("Erreur lors de la création de l'espace")
+            addToast("Erreur lors de la création de l'espace", 'error')
         } finally {
             setLoading(false)
         }

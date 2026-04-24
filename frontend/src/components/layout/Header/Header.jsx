@@ -47,10 +47,8 @@ export default function Header() {
         const handleScroll = () => {
             setVisible(true)
 
-            // Annule le timer précédent
             if (timeoutRef.current) clearTimeout(timeoutRef.current)
 
-            // Cache le header après 2 secondes sans scroll sauf en haut de la page
             timeoutRef.current = setTimeout(() => {
                 if (window.scrollY > 0) {
                     setVisible(false)
@@ -70,7 +68,6 @@ export default function Header() {
             }`}>
             <div className="max-w-7xl mx-auto flex items-center justify-between">
 
-                {/* Logo + nom */}
                 <div className="flex items-center gap-2">
                     <img
                         src={logo}

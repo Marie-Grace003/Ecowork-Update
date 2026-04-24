@@ -73,7 +73,6 @@ export default function EditEspaceModal({ espace, onClose, onUpdated }) {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4 py-8 overflow-y-auto">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg my-auto">
 
-                {/* Header modal */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-100">
                     <div>
                         <h2 className="text-xl font-bold text-gray-800 tracking-tighter">Modifier l'espace</h2>
@@ -91,7 +90,6 @@ export default function EditEspaceModal({ espace, onClose, onUpdated }) {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
 
-                        {/* Nom */}
                         <div>
                             <label className="block text-sm font-medium mb-1">Nom de l'espace</label>
                             <input
@@ -103,7 +101,6 @@ export default function EditEspaceModal({ espace, onClose, onUpdated }) {
                             />
                         </div>
 
-                        {/* Surface + Type */}
                         <div className="grid grid-cols-2 gap-3">
                             <div>
                                 <label className="block text-sm font-medium mb-1">Surface (m²)</label>
@@ -130,7 +127,6 @@ export default function EditEspaceModal({ espace, onClose, onUpdated }) {
                             </div>
                         </div>
 
-                        {/* Tarif */}
                         <div>
                             <label className="block text-sm font-medium mb-1">Tarif journalier (€)</label>
                             <input
@@ -142,7 +138,6 @@ export default function EditEspaceModal({ espace, onClose, onUpdated }) {
                             />
                         </div>
 
-                        {/* Équipements */}
                         <div>
                             <label className="block text-sm font-medium mb-2">Équipements</label>
                             <div className="flex flex-wrap gap-2">
@@ -169,7 +164,6 @@ export default function EditEspaceModal({ espace, onClose, onUpdated }) {
                             </div>
                         </div>
 
-                        {/* Photos existantes */}
                         {espace.photos && espace.photos.length > 0 && (
                             <div>
                                 <label className="block text-sm font-medium mb-2">Photos actuelles</label>
@@ -194,7 +188,6 @@ export default function EditEspaceModal({ espace, onClose, onUpdated }) {
                             </div>
                         )}
 
-                        {/* Nouvelles photos */}
                         <div>
                             <label className="block text-sm font-medium mb-2">Ajouter des photos</label>
                             <div
@@ -227,7 +220,6 @@ export default function EditEspaceModal({ espace, onClose, onUpdated }) {
                             )}
                         </div>
 
-                        {/* Boutons */}
                         <div className="flex gap-3 pt-2">
                             <button
                                 type="button"
